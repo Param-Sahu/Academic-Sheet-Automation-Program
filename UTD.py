@@ -1,11 +1,14 @@
 import pandas as pd
 
+student_sheet = "student_detail_test.xls"
+sem_sheet = "SEM-I_master sheet_test.xls"
+UTD_output_file = "UTD_test.csv"
 # -----------------------------
 # Step 1: Read the Excel file
 # -----------------------------
 # Load the Excel file without headers so that rows and columns can be accessed by their index.
-df_excel = pd.read_excel("SEM-I_master sheet.xls", header=None)
-df_student = pd.read_excel("student_detail.xls",header=None)
+df_excel = pd.read_excel(sem_sheet, header=None)
+df_student = pd.read_excel(student_sheet,header=None)
 
 # Extract Session for particular Batch
 session = df_student.iloc[2,1]
@@ -27,12 +30,12 @@ names = df_excel.iloc[3:, 1].reset_index(drop=True)
 # Step 2: Read the CSV file
 # -----------------------------
 # Load UTD.csv; here it's assumed that the CSV does not have a header.
-df_utd = pd.read_csv("UTD.csv", header=None)
+df_utd = pd.read_csv(UTD_output_file, header=None)
 
 # -----------------------------
 # Step 3: Ensure UTD.csv has enough rows and columns
 # -----------------------------
-# Calculate required number of rows (roll/enrollment numbers start at row 3)
+# Calculate required number of rows (roll/enrollment numbers etc. start at row 3)
 required_rows = max(len(roll_numbers), len(enrollment_numbers)) + 2  # Account for first 2 rows
 if len(df_utd) < required_rows:
     extra_rows = pd.DataFrame([[""] * df_utd.shape[1]] * (required_rows - len(df_utd)))
@@ -72,7 +75,6 @@ for i, mother in enumerate(mothers):
 # -----------------------------
 # Step 5: Save the updated CSV file
 # -----------------------------
-df_utd.to_csv("UTD.csv", index=False, header=False)
+df_utd.to_csv(UTD_output_file, index=False, header=False)
 
-print("Enrollment numbers and roll numbers and Name ")
-print("have been successfully written to UTD.csv .")
+print("Student Data and Semester Data has been Successfully added to UTD Output file. ")
