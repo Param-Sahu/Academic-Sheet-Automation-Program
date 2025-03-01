@@ -1,8 +1,8 @@
 import pandas as pd
 
-student_sheet = "student_detail_test.xls"
-sem_sheet = "SEM-I_master sheet_test.xls"
-UTD_output_file = "UTD_test.csv"
+student_sheet = "student_detail.xls"
+sem_sheet = "SEM-I_master sheet.xls"
+UTD_output_file = "UTD.csv"
 # -----------------------------
 # Step 1: Read the Excel file
 # -----------------------------
@@ -44,14 +44,15 @@ if len(df_utd) < required_rows:
 # Step 4: Fill constant data for all students
 # -----------------------------
 # For each student (starting at row 3 i.e. index 2), fill in columns A-F with constant values.
-for i in range(2, required_rows):
-    df_utd.iat[i, 0] = "DEVI AHILYA VISHWAVIDYALAYA INDORE"  # University Name (Column A)
-    df_utd.iat[i, 1] = "SCHOOL OF INSTRUMENTATION INDORE"      # College Name (Column B)
-    df_utd.iat[i, 2] = "M.TECH (IOT)"                           # Course Name in Short (Column C)
-    df_utd.iat[i, 3] = "MASTER OF TECHNOLOGY"                   # Full Course Name (Column D)
-    df_utd.iat[i, 4] = "MASTER OF TECHNOLOGY"                   # Full Course Name in Detail (Column E)
-    df_utd.iat[i, 5] = "INTERNET OF THINGS"     # Stream (Column F)
-    df_utd.iat[i,7] = session            # Session for Batch      
+
+df_utd.iloc[2:required_rows, 0] = "DEVI AHILYA VISHWAVIDYALAYA INDORE"   # University Name (Column A)
+df_utd.iloc[2:required_rows, 1] = "SCHOOL OF INSTRUMENTATION INDORE"     # College Name (Column B)
+df_utd.iloc[2:required_rows, 2] = "INTEGRATED M.TECH (IOT)"              # Course Name in Short (Column C)
+df_utd.iloc[2:required_rows, 3] = "INTEGRATED MASTER OF TECHNOLOGY"      # Full Course Name (Column D)
+df_utd.iloc[2:required_rows, 4] = "INTEGRATED MASTER OF TECHNOLOGY"      # Full Course Name in Detail (Column E)
+df_utd.iloc[2:required_rows, 5] = "INTERNET OF THINGS"                   # Stream (Column F)
+df_utd.iloc[2:required_rows, 7] = session                                # Session for Batch 
+
 # -----------------------------
 # Step 5: Write the data into UTD.csv
 # -----------------------------
