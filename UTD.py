@@ -2,7 +2,8 @@ import pandas as pd
 
 student_sheet = "student_detail.xls"
 sem_sheet = "SEM-I_master sheet.xls"
-UTD_output_file = "UTD.csv"
+UTD_file = "UTD.csv"
+current_semester = sem_sheet.split('_')[0] # Extracting Current Semester from file name.
 # -----------------------------
 # Step 1: Read the Excel file
 # -----------------------------
@@ -14,8 +15,8 @@ df_student = pd.read_excel(student_sheet,header=None)
 session = df_student.iloc[2,1]
 
 # Extract Parents Names for all Students 
-fathers = df_student.iloc[4:,4].reset_index(drop = True)
-mothers = df_student.iloc[4:,5].reset_index(drop = True)
+fathers_name = df_student.iloc[4:,4].reset_index(drop = True)
+mothers_name = df_student.iloc[4:,5].reset_index(drop = True)
 
 # Extract roll numbers from column C (index 2) starting from row 4 (index 3)
 roll_numbers = df_excel.iloc[3:, 2].reset_index(drop=True)
@@ -24,13 +25,13 @@ roll_numbers = df_excel.iloc[3:, 2].reset_index(drop=True)
 enrollment_numbers = df_excel.iloc[3:, 3].reset_index(drop=True)
 
 # Extract Names of Student from column 'B' (index 1) starting from row 4 (index 3)
-names = df_excel.iloc[3:, 1].reset_index(drop=True)
+student_names = df_excel.iloc[3:, 1].reset_index(drop=True)
 
 # -----------------------------
 # Step 2: Read the CSV file
 # -----------------------------
 # Load UTD.csv; here it's assumed that the CSV does not have a header.
-df_utd = pd.read_csv(UTD_output_file, header=None)
+df_utd = pd.read_csv(UTD_file, header=None)
 
 # -----------------------------
 # Step 3: Ensure UTD.csv has enough rows and columns
@@ -51,31 +52,34 @@ df_utd.iloc[2:required_rows, 2] = "INTEGRATED M.TECH (IOT)"              # Cours
 df_utd.iloc[2:required_rows, 3] = "INTEGRATED MASTER OF TECHNOLOGY"      # Full Course Name (Column D)
 df_utd.iloc[2:required_rows, 4] = "INTEGRATED MASTER OF TECHNOLOGY"      # Full Course Name in Detail (Column E)
 df_utd.iloc[2:required_rows, 5] = "INTERNET OF THINGS"                   # Stream (Column F)
-df_utd.iloc[2:required_rows, 7] = session                                # Session for Batch 
-
+df_utd.iloc[2:required_rows, 7] =  session                               # Session for Batch  
+df_utd.iloc[2:required_rows, 23] = current_semester.split('-')[1]        # Semester for Batch , Extracting Semester Number from file name. By SEM-I , spliting it by '-' and taking 2nd part of it.
+df_utd.iloc[2:required_rows, 24] = current_semester.split('-')[0]        # Semester for Batch , Extracting Sem or Year from file name. By SEM-I , spliting it by '-' and taking 1st part of it.
 # -----------------------------
 # Step 5: Write the data into UTD.csv
 # -----------------------------
-# Write enrollment numbers into column I (index 8) starting from row 3 (index 2)
-for i, enrollment in enumerate(enrollment_numbers):
-    df_utd.iat[i + 2, 8] = enrollment
+# Dictionary of data to be written into UTD.csv in the format {column: data}
+variable_data = {
+                8: enrollment_numbers,  # Column : Data (Format of data for UTD.csv)
+                9: roll_numbers,
+                10:student_names,
+                13:fathers_name,
+                14:mothers_name
+                }  # Dictionary of data to be written into UTD.csv
 
-# Write roll numbers into column J (index 9) starting from row 3 (index 2)
-for i, roll_number in enumerate(roll_numbers):
-    df_utd.iat[i + 2, 9] = roll_number
+# Write data into UTD.csv
+for column, values in variable_data.items():
+    for i, value in enumerate(values):
+        df_utd.iat[i + 2, column] = value
 
-# Write Names into column  (index 9) starting from row 3 (index 2)
-for i, name in enumerate(names):
-    df_utd.iat[i + 2, 10] = name
-
-for i, father  in enumerate(fathers):
-    df_utd.iat[i + 2, 13] = father
-
-for i, mother in enumerate(mothers):
-    df_utd.iat[i + 2, 14] = mother
 # -----------------------------
 # Step 5: Save the updated CSV file
 # -----------------------------
-df_utd.to_csv(UTD_output_file, index=False, header=False)
+UTD_output_file = "UTD_" + session + '_' + current_semester + '.csv' # Creating a seperate CSV file for different semesters data.
 
-print("Student Data and Semester Data has been Successfully added to UTD Output file. ")
+try:
+    df_utd.to_csv(UTD_output_file, index=False, header=False)
+    print("Student Data and Semester Data has been Successfully added to UTD Output file. ")
+except Exception as e:
+    print("Error occurred while writing data to UTD file: ", e)
+    print("Please check if the file is open in another program and close it before running the script again.")
