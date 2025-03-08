@@ -26,6 +26,24 @@ enrollment_numbers = df_excel.iloc[3:, 3].reset_index(drop=True)
 
 # Extract Names of Student from column 'B' (index 1) starting from row 4 (index 3)
 student_names = df_excel.iloc[3:, 1].reset_index(drop=True)
+# Extract Credits, SGPA and Results of all Students
+credits = df_excel.iloc[2, 4:].reset_index(drop=True)
+credits = credits.dropna()
+total_subjects, total_credits = len(credits), sum(credits)
+sgpa = df_excel.iloc[3:, 4 + total_subjects ].reset_index(drop=True)
+results = df_excel.iloc[3:, 5 + total_subjects].reset_index(drop=True)
+division = sgpa.apply(lambda x: 'FIRST WITH DISTINCTION' if x >= 8.0 
+                      else ('FIRST' if x >= 6.5
+                      else ('SECOND' if x >= 5.0 
+                            else ('PASS' if x >= 4.0 else 'FAIL'))))
+
+if current_semester == "SEM-I":
+    cgpa = sgpa.copy()
+    YEAR = int(session.split('-')[0])+1
+    if YEAR == 2023:
+        MONTH = "MARCH"
+    else:
+        MONTH = "JANUARY"
 
 # -----------------------------
 # Step 2: Read the CSV file
@@ -53,8 +71,11 @@ df_utd.iloc[2:required_rows, 3] = "INTEGRATED MASTER OF TECHNOLOGY"      # Full 
 df_utd.iloc[2:required_rows, 4] = "INTEGRATED MASTER OF TECHNOLOGY"      # Full Course Name in Detail (Column E)
 df_utd.iloc[2:required_rows, 5] = "INTERNET OF THINGS"                   # Stream (Column F)
 df_utd.iloc[2:required_rows, 7] = session                                # Session for Batch  
+df_utd.iloc[2:required_rows, 18] = YEAR                                  # Year for Batch  
+df_utd.iloc[2:required_rows, 19] = MONTH                                 # MONTH for Batch  
 df_utd.iloc[2:required_rows, 23] = current_semester.split('-')[1]        # Semester for Batch , Extracting Semester Number from file name. By SEM-I , spliting it by '-' and taking 2nd part of it.
 df_utd.iloc[2:required_rows, 24] = current_semester.split('-')[0]        # Semester for Batch , Extracting Sem or Year from file name. By SEM-I , spliting it by '-' and taking 1st part of it.
+df_utd.iloc[2:required_rows, 27] = total_credits                           # Total Credits for Batch
 # -----------------------------
 # Step 5: Write the data into UTD.csv
 # -----------------------------
@@ -63,7 +84,11 @@ variable_data = {8: enrollment_numbers,  # Column : Data format
                  9: roll_numbers,
                 10:student_names,
                 13:fathers_name,
-                14:mothers_name
+                14:mothers_name,
+                17:results,
+                20: division,
+                32: cgpa,
+                34:sgpa
                  }  # Dictionary of data to be written into UTD.csv
 
 # Write data into UTD.csv
