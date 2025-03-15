@@ -1,15 +1,26 @@
 import pandas as pd
+from roman import fromRoman
 
 student_sheet = "student_detail.xls"
 sem_sheet = "SEM-I_master sheet.xls"
+all_sem_file = "student_detail_new.xls"
 UTD_file = "UTD.csv"
 current_semester = sem_sheet.split('_')[0] # Extracting Current Semester from file name.
+sem_number = fromRoman(current_semester.split('-')[1]) # Extracting Semester Number from file name.
+semester_attempt = "Attempt_"+str(sem_number)
 # -----------------------------
 # Step 1: Read the Excel file
 # -----------------------------
 # Load the Excel file without headers so that rows and columns can be accessed by their index.
 df_excel = pd.read_excel(sem_sheet, header=None)
 df_student = pd.read_excel(student_sheet,header=None)
+
+# Extract Attempts for all Students
+df_all_sem = pd.read_excel(all_sem_file, header=3)
+attempts = df_all_sem.loc[:,semester_attempt]
+attempts = attempts.dropna()
+attempts = attempts.astype(int)
+marksheet_status = attempts.apply(lambda x: "O" if x ==1 else "M") # O for Original and M for Modified Marksheet (represents ATKT)
 
 # Extract Session for particular Batch
 session = df_student.iloc[2,1]
@@ -87,10 +98,12 @@ variable_data = {
                 10:student_names,
                 13:fathers_name,
                 14:mothers_name,
+                #16:marksheet_status,
                 17:results,
                 20: division,
                 32: cgpa,
-                34:sgpa
+                34:sgpa,
+                38:student_names
                 }  # Dictionary of data to be written into UTD.csv
 
 # Write data into UTD.csv
