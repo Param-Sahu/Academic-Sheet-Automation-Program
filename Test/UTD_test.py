@@ -42,6 +42,15 @@ credits = credits.dropna()
 total_subjects, total_credits = len(credits), sum(credits)
 sgpa = df_excel.iloc[3:, 4 + total_subjects ].reset_index(drop=True)
 results = df_excel.iloc[3:, 5 + total_subjects].reset_index(drop=True)
+
+# Extract Subjects for all students
+subjects = df_excel.iloc[:,4:4 + total_subjects].reset_index(drop=True)
+subjects.columns = range(total_subjects)
+subjects_id = subjects.iloc[0,:] # Extracting Subject IDs from first row of subjects
+subjects_names = subjects.iloc[1,:]
+grades = subjects.iloc[3:, :].reset_index(drop=True)
+
+
 division = sgpa.apply(lambda x: 'FIRST WITH DISTINCTION' if x >= 8.0 
                       else ('FIRST' if x >= 6.5
                       else ('SECOND' if x >= 5.0 
@@ -108,6 +117,19 @@ for column, values in variable_data.items():
     for i, value in enumerate(values):
         df_utd.iat[i + 2, column] = value
 
+
+j=0
+for i in range(total_subjects):
+    df_utd.iloc[2:required_rows, 39 + j] = subjects_names[i]
+    df_utd.iloc[2:required_rows, 40 + j] = subjects_id[i]
+    df_utd.iloc[2:required_rows, 51 + j] = credits[i]
+    j+=15
+
+k=0
+for i in range(total_subjects):
+    for j,value in enumerate(grades.iloc[:,i]):
+        df_utd.iat[2+j, 49 + k] = value
+    k+=15
 # -----------------------------
 # Step 5: Save the updated CSV file
 # -----------------------------
