@@ -49,6 +49,7 @@ subjects.columns = range(total_subjects)
 subjects_id = subjects.iloc[0,:] # Extracting Subject IDs from first row of subjects
 subjects_names = subjects.iloc[1,:]
 grades = subjects.iloc[3:, :].reset_index(drop=True)
+grade_points = {'O':10, 'A+':9, 'A':8, 'B+':7, 'B':6, 'C':5, 'P':4, 'F':0, 'Ab':0} # Dictionary for Grade points with respective grade.
 
 
 division = sgpa.apply(lambda x: 'FIRST WITH DISTINCTION' if x >= 8.0 
@@ -127,8 +128,10 @@ for i in range(total_subjects):
 
 k=0
 for i in range(total_subjects):
-    for j,value in enumerate(grades.iloc[:,i]):
-        df_utd.iat[2+j, 49 + k] = value
+    for j,grade in enumerate(grades.iloc[:,i]):
+        df_utd.iat[2+j, 49 + k] = grade
+        df_utd.iat[2+j, 50 + k] = grade_points[grade]
+        df_utd.iat[2+j, 52 + k] = grade_points[grade]*credits[i]
     k+=15
 # -----------------------------
 # Step 5: Save the updated CSV file
