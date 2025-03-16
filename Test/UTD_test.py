@@ -129,6 +129,12 @@ for i in range(total_subjects):
 k=0
 for i in range(total_subjects):
     for j,grade in enumerate(grades.iloc[:,i]):
+        
+        if grade=='F' or grade=='Ab':
+            df_utd.iat[2+j, 48 + k] = 'FAIL'
+        else:
+            df_utd.iat[2+j, 48 + k] = 'PASS'
+
         df_utd.iat[2+j, 49 + k] = grade
         df_utd.iat[2+j, 50 + k] = grade_points[grade]
         df_utd.iat[2+j, 52 + k] = grade_points[grade]*credits[i]
