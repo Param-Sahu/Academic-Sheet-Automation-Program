@@ -1,5 +1,8 @@
 import pandas as pd
 from roman import fromRoman
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 student_sheet = "student_detail_test.xls"
 sem_sheet = "SEM-I_master sheet_test.xls"
 all_sem_file = "student_detail_new.xls"
@@ -48,8 +51,16 @@ subjects = df_excel.iloc[:,4:4 + total_subjects].reset_index(drop=True)
 subjects.columns = range(total_subjects)
 subjects_id = subjects.iloc[0,:] # Extracting Subject IDs from first row of subjects
 subjects_names = subjects.iloc[1,:]
+
+# Extracting Grades and calculating grade points for all students
 grades = subjects.iloc[3:, :].reset_index(drop=True)
 grade_points = {'O':10, 'A+':9, 'A':8, 'B+':7, 'B':6, 'C':5, 'P':4, 'F':0, 'Ab':0} # Dictionary for Grade points with respective grade.
+
+# Replace grades with corresponding grade points
+grade_points_df = grades.replace(grade_points)
+
+# Multiply each column by its corresponding credit value and sum row-wise
+credits_earn = grade_points_df.mul(credits, axis=1).sum(axis=1)
 
 
 division = sgpa.apply(lambda x: 'FIRST WITH DISTINCTION' if x >= 8.0 
@@ -108,6 +119,8 @@ variable_data = {8: enrollment_numbers,  # Column : Data format
                 16:marksheet_status,
                 17:results,
                 20: division,
+                28: credits_earn,
+                31: credits_earn,
                 32: cgpa,
                 34:sgpa,
                 38:student_names
