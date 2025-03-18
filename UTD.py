@@ -1,5 +1,5 @@
 import pandas as pd
-from roman import fromRoman
+from roman import toRoman
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -7,9 +7,7 @@ student_sheet = "student_detail.xls"
 sem_sheet = "SEM-I_master sheet.xls"
 all_sem_file = "student_detail_new.xls"
 UTD_file = "UTD.csv"
-current_semester = sem_sheet.split('_')[0] # Extracting Current Semester from file name.
-sem_number = fromRoman(current_semester.split('-')[1]) # Extracting Semester Number from file name.
-semester_attempt = "Attempt_"+str(sem_number)
+
 # -----------------------------
 # Step 1: Read the Excel file
 # -----------------------------
@@ -19,10 +17,6 @@ df_student = pd.read_excel(student_sheet,header=None)
 
 # Extract Attempts for all Students
 df_all_sem = pd.read_excel(all_sem_file, header=3)
-attempts = df_all_sem.loc[:,semester_attempt]
-attempts = attempts.dropna()
-attempts = attempts.astype(int)
-marksheet_status = attempts.apply(lambda x: "O" if x ==1 else "M") # O for Original and M for Modified Marksheet (represents ATKT)
 
 # Extract Session for particular Batch
 session = df_student.iloc[2,1]
@@ -33,6 +27,17 @@ mothers_name = df_student.iloc[4:,5].reset_index(drop = True)
 
 # Extract roll numbers from column C (index 2) starting from row 4 (index 3)
 roll_numbers = df_excel.iloc[3:, 2].reset_index(drop=True)
+
+# Extracting Semester for Batch
+sem_number = int(roll_numbers[0][5:-3]) # Extracting Semester Number from roll number.
+current_semester = "SEM-" + str(toRoman(sem_number))
+semester_attempt = "Attempt_"+str(sem_number)
+
+# Extract Attempts for all Students
+attempts = df_all_sem.loc[:,semester_attempt]
+attempts = attempts.dropna()
+attempts = attempts.astype(int)
+marksheet_status = attempts.apply(lambda x: "O" if x ==1 else "M") # O for Original and M for Modified Marksheet (represents ATKT)
 
 # Extract enrollment numbers from column D (index 3) starting from row 4 (index 3)
 enrollment_numbers = df_excel.iloc[3:, 3].reset_index(drop=True)
@@ -104,8 +109,8 @@ df_utd.iloc[2:required_rows, 5] = "INTERNET OF THINGS"                   # Strea
 df_utd.iloc[2:required_rows, 7] =  session                               # Session for Batch  
 df_utd.iloc[2:required_rows, 18] = YEAR                                  # Year for Batch  
 df_utd.iloc[2:required_rows, 19] = MONTH                                 # MONTH for Batch  
-df_utd.iloc[2:required_rows, 23] = current_semester.split('-')[1]        # Semester for Batch , Extracting Semester Number from file name. By SEM-I , spliting it by '-' and taking 2nd part of it.
-df_utd.iloc[2:required_rows, 24] = current_semester.split('-')[0]        # Semester for Batch , Extracting Sem or Year from file name. By SEM-I , spliting it by '-' and taking 1st part of it.
+df_utd.iloc[2:required_rows, 23] = current_semester.split('-')[1]        # Semester for Batch , Extracting Semester Number. By SEM-I , spliting it by '-' and taking 2nd part of it.
+df_utd.iloc[2:required_rows, 24] = current_semester.split('-')[0]        # Semester for Batch , Extracting Sem or Year Exam Type. By SEM-I , spliting it by '-' and taking 1st part of it.
 df_utd.iloc[2:required_rows, 27] = total_credits                           # Total Credits for Batch
 
 # -----------------------------
