@@ -134,6 +134,7 @@ for column, values in variable_data.items():
         df_utd.iat[i + 2, column] = value
 
 
+# Filling the constant data Subject Name, Credit and Code for every student.
 j=0
 for i in range(total_subjects):
     df_utd.iloc[2:required_rows, 39 + j] = subjects_names[i]
@@ -141,7 +142,7 @@ for i in range(total_subjects):
     df_utd.iloc[2:required_rows, 51 + j] = credits[i]
     j+=15
 
-
+# Filling the Grades row-wise for each student in the interval of 15 columns for each subject.
 k=0
 for i in range(total_subjects):
     for j,grade in enumerate(grades.iloc[:,i]):
