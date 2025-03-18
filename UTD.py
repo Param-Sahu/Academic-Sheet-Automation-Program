@@ -3,7 +3,6 @@ from roman import toRoman
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-student_sheet = "student_detail.xls"
 sem_sheet = "SEM-I_master sheet.xls"
 all_sem_file = "student_detail_new.xls"
 UTD_file = "UTD.csv"
