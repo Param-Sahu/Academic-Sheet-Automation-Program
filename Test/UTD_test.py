@@ -3,7 +3,6 @@ from roman import toRoman
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-student_sheet = "student_detail_test.xls"
 sem_sheet = "SEM-I_master sheet_test.xls"
 all_sem_file = "student_detail_new.xls"
 UTD_file = "UTD_test.csv"
@@ -13,15 +12,18 @@ UTD_file = "UTD_test.csv"
 # -----------------------------
 # Load the Excel file without headers so that rows and columns can be accessed by their index.
 df_excel = pd.read_excel(sem_sheet, header=None)
-df_student = pd.read_excel(student_sheet,header=None)
+
 df_all_sem = pd.read_excel(all_sem_file, header=3)
 
-# Extract Session for particular Batch
-session = df_student.iloc[2,1]
+# Extract Batch Information for all students (Row index 2, Column index 1 assuming zero-based index)
+batch =  (pd.read_excel(all_sem_file, header=None)).iloc[2, 1]  # Row 2, Column B in Excel (0-based index)
 
 # Extract Parents Names for all Students 
-fathers_name = df_student.iloc[4:,4].reset_index(drop = True)
-mothers_name = df_student.iloc[4:,5].reset_index(drop = True)
+fathers_name = df_all_sem.loc[:,"Father’s Name"].reset_index(drop = True)
+fathers_name = fathers_name.dropna()
+
+mothers_name = df_all_sem.loc[:,"Mother’s Name"].reset_index(drop = True)
+mothers_name = mothers_name.dropna()
 
 # Extract roll numbers from column C (index 2) starting from row 4 (index 3)
 roll_numbers = df_excel.iloc[3:, 2].reset_index(drop=True)
@@ -73,7 +75,7 @@ division = sgpa.apply(lambda x: 'FIRST WITH DISTINCTION' if x >= 8.0
 
 if current_semester == "SEM-I":
     cgpa = sgpa.copy()
-    YEAR = int(session.split('-')[0])+1
+    YEAR = int(batch.split('-')[0])+1
     if YEAR == 2023:
         MONTH = "MARCH"
     else:
@@ -104,7 +106,7 @@ df_utd.iloc[2:required_rows, 2] = "INTEGRATED M.TECH (IOT)"              # Cours
 df_utd.iloc[2:required_rows, 3] = "INTEGRATED MASTER OF TECHNOLOGY"      # Full Course Name (Column D)
 df_utd.iloc[2:required_rows, 4] = "INTEGRATED MASTER OF TECHNOLOGY"      # Full Course Name in Detail (Column E)
 df_utd.iloc[2:required_rows, 5] = "INTERNET OF THINGS"                   # Stream (Column F)
-df_utd.iloc[2:required_rows, 7] = session                                # Session for Batch  
+df_utd.iloc[2:required_rows, 7] = batch                                  # Session for Batch  
 df_utd.iloc[2:required_rows, 18] = YEAR                                  # Year for Batch  
 df_utd.iloc[2:required_rows, 19] = MONTH                                 # MONTH for Batch  
 df_utd.iloc[2:required_rows, 23] = current_semester.split('-')[1]        # Semester for Batch , Extracting Semester Number. By SEM-I , spliting it by '-' and taking 2nd part of it.
@@ -160,7 +162,7 @@ for i in range(total_subjects):
 # -----------------------------
 # Step 5: Save the updated CSV file
 # -----------------------------
-UTD_output_file = "UTD_" + session + '_' + current_semester + '.csv' # Creating a seperate CSV file for different semesters data.
+UTD_output_file = "UTD_" + batch + '_' + current_semester + '.csv' # Creating a seperate CSV file for different semesters data.
 
 try:
     df_utd.to_csv(UTD_output_file, index=False, header=False)
