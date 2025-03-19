@@ -3,7 +3,7 @@ from roman import toRoman
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-sem_sheet = "SEM-I_master sheet.xls"
+sem_sheet = "SEM-II_master sheet.xls"
 all_sem_file = "student_detail_new.xls"
 UTD_file = "UTD.csv"
 
@@ -74,14 +74,50 @@ division = sgpa.apply(lambda x: 'FIRST WITH DISTINCTION' if x >= 8.0
                       else ('SECOND' if x >= 5.0 
                             else ('PASS' if x >= 4.0 else 'FAIL'))))
 
-if current_semester == "SEM-I":
-    cgpa = sgpa.copy()
+# Calculating CGPA according to Semesters (Total SGPA till current Semester)/semester_number
+total_sgpa = df_all_sem.loc[:len(roll_numbers)-1 ,'Sem1':'Sem'+str(sem_number)].sum(axis=1)
+cgpa = round(total_sgpa/sem_number,3)
+
+# Deciding Month and Year of Semester Exam according to semesters.
+if sem_number ==1 :
     YEAR = int(batch.split('-')[0])+1
     if YEAR == 2023:
         MONTH = "MARCH"
     else:
         MONTH = "JANUARY"
-    
+
+elif sem_number ==2 :
+    YEAR = int(batch.split('-')[0])+1
+    if YEAR == 2023:
+        MONTH = "JULY"
+    else:
+        MONTH = "JUNE"
+
+elif sem_number == 3:
+    YEAR = int(batch.split('-')[0])+1
+    MONTH = "DECEMBER"
+elif sem_number == 4:
+    YEAR = int(batch.split('-')[0]) + 2
+    MONTH = "MAY"
+elif sem_number == 5:
+    YEAR = int(batch.split('-')[0]) + 2
+    MONTH = "DECEMBER"
+elif sem_number == 6:
+    YEAR = int(batch.split('-')[0]) + 3
+    MONTH = "MAY"
+elif sem_number == 7:
+    YEAR = int(batch.split('-')[0]) + 3
+    MONTH = "DECEMBER"
+elif sem_number == 8:
+    YEAR = int(batch.split('-')[0]) + 4
+    MONTH = "MAY"
+elif sem_number == 9:
+    YEAR = int(batch.split('-')[0]) + 4
+    MONTH = "DECEMBER"
+elif sem_number == 10:
+    YEAR = int(batch.split('-')[1])
+    MONTH = "MAY"
+
 # -----------------------------
 # Step 2: Read the CSV file
 # -----------------------------
