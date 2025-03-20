@@ -3,7 +3,7 @@ from roman import toRoman
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-sem_sheet = "SEM-II_master sheet.xls"
+sem_sheet = "SEM-I_master sheet.xls"
 all_sem_file = "student_detail_new.xls"
 UTD_file = "UTD.csv"
 
@@ -149,6 +149,7 @@ df_utd.iloc[2:required_rows, 19] = MONTH                                 # MONTH
 df_utd.iloc[2:required_rows, 23] = current_semester.split('-')[1]        # Semester for Batch , Extracting Semester Number. By SEM-I , spliting it by '-' and taking 2nd part of it.
 df_utd.iloc[2:required_rows, 24] = current_semester.split('-')[0]        # Semester for Batch , Extracting Sem or Year Exam Type. By SEM-I , spliting it by '-' and taking 1st part of it.
 df_utd.iloc[2:required_rows, 27] = total_credits                           # Total Credits for Batch
+df_utd.iloc[2:required_rows, 339] = batch.split('-')[0]                  # Admission Year 
 
 # -----------------------------
 # Step 5: Write the data into UTD.csv
