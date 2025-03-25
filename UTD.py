@@ -3,10 +3,10 @@ from roman import toRoman
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-sem_sheet = "SEM-I_master sheet.xls"
-all_sem_file = "student_detail_new.xls"
+sem_sheet = "SEM-V_master sheet.xls"
+all_sem_file = "student_detail_new5.xls"
 UTD_file = "UTD.csv"
-
+abc_file = "ABC ID's_2022_new.xlsx"
 # -----------------------------
 # Step 1: Read the Excel file
 # -----------------------------
@@ -151,6 +151,10 @@ df_utd.iloc[2:required_rows, 24] = current_semester.split('-')[0]        # Semes
 df_utd.iloc[2:required_rows, 27] = total_credits                           # Total Credits for Batch
 df_utd.iloc[2:required_rows, 339] = batch.split('-')[0]                  # Admission Year 
 
+
+# Extracting ABC_ID from file but only till required rows.(As per number of students)
+abc_id = pd.read_excel(abc_file,header=0).loc[:required_rows-3,"ABC ID"] # required rows-3 indicated included rows 
+
 # -----------------------------
 # Step 5: Write the data into UTD.csv
 # -----------------------------
@@ -168,6 +172,7 @@ variable_data = {
                 31: credits_earn,
                 32: cgpa,
                 34:sgpa,
+                35:abc_id,
                 38:student_names
                 }  # Dictionary of data to be written into UTD.csv
 
