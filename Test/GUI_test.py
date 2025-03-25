@@ -276,11 +276,11 @@ def run_program():
             output_directory = os.path.dirname(sem_sheet)  # Get the directory of the master sheet
             UTD_output_file = os.path.join(output_directory, f"UTD_{batch}_{current_semester}.csv")  # Save in the same directory
             df_utd.to_csv(UTD_output_file, index=False, header=False)
-            messagebox.showinfo("Success","Student Data and Semester Data has been Successfully added to UTD Output file. ")
+            messagebox.showinfo("Success", f"UTD Output file saved as {UTD_output_file}")
         except Exception as e:
             messagebox.showerror("Error occurred while writing data to UTD file: ", e)
             messagebox.showerror("Please check if the file is open in another program and close it before running the script again.")
-        messagebox.showinfo("Success", "Data has been successfully processed and saved to the output file.")
+        messagebox.showinfo("Success","Student Data and Semester Data has been Successfully added to UTD Output file. ")
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
 
@@ -295,32 +295,40 @@ def browse_file(entry, file_type):
 
 # Create the main window
 root = tk.Tk()
-root.title("Data Entry GUI")
-root.geometry("700x500")
+root.title("Academic Sheet Automation Program (ASAP)")
+root.geometry("950x600")
+root.resizable(False, False) # Disable resizing of the window
+root.configure(bg="#f0f8ff")  # Light blue background for a professional look
+
+# Heading
+tk.Label(root, text="Academic Sheet Automation Program (ASAP)", font=("Helvetica", 24, "bold"), bg="#f0f8ff", fg="#000080").grid(row=0, column=0, columnspan=3, pady=20)
+
+# Subheading
+tk.Label(root, text="School of Instrumentation, DAVV", font=("Helvetica", 16, "italic"), bg="#f0f8ff", fg="#000080").grid(row=1, column=0, columnspan=3, pady=10)
 
 # Labels and entry fields for file selection
-tk.Label(root, text="Select Master Sheet for Semester (Excel):").grid(row=0, column=0, padx=10, pady=10, sticky="w")
-sem_sheet_path = tk.Entry(root, width=50)
-sem_sheet_path.grid(row=0, column=1, padx=10, pady=10)
-tk.Button(root, text="Browse", command=lambda: browse_file(sem_sheet_path, "excel")).grid(row=0, column=2, padx=10, pady=10)
+tk.Label(root, text="Select Master Sheet for Semester (Excel) :", font=("Helvetica", 12,"bold"), bg="#f0f8ff", fg="#000000").grid(row=2, column=0, padx=10, pady=10, sticky="w")
+sem_sheet_path = tk.Entry(root, width=50, font=("Helvetica", 12))
+sem_sheet_path.grid(row=2, column=1, padx=10, pady=10)
+tk.Button(root, text="Browse", command=lambda: browse_file(sem_sheet_path, "excel"), font=("Helvetica", 12), bg="#4682b4", fg="white").grid(row=2, column=2, padx=10, pady=10)
 
-tk.Label(root, text="Select Student Details New File (Excel):").grid(row=1, column=0, padx=10, pady=10, sticky="w")
-all_sem_file_path = tk.Entry(root, width=50)
-all_sem_file_path.grid(row=1, column=1, padx=10, pady=10)
-tk.Button(root, text="Browse", command=lambda: browse_file(all_sem_file_path, "excel")).grid(row=1, column=2, padx=10, pady=10)
+tk.Label(root, text="Select Student Details New File (Excel) :", font=("Helvetica", 12,"bold"), bg="#f0f8ff", fg="#000000").grid(row=3, column=0, padx=10, pady=10, sticky="w")
+all_sem_file_path = tk.Entry(root, width=50, font=("Helvetica", 12))
+all_sem_file_path.grid(row=3, column=1, padx=10, pady=10)
+tk.Button(root, text="Browse", command=lambda: browse_file(all_sem_file_path, "excel"), font=("Helvetica", 12), bg="#4682b4", fg="white").grid(row=3, column=2, padx=10, pady=10)
 
-tk.Label(root, text="Select ABC_file (Excel):").grid(row=2, column=0, padx=10, pady=10, sticky="w")
-abc_file_path = tk.Entry(root, width=50)
-abc_file_path.grid(row=2, column=1, padx=10, pady=10)
-tk.Button(root, text="Browse", command=lambda: browse_file(abc_file_path, "excel")).grid(row=2, column=2, padx=10, pady=10)
+tk.Label(root, text="Select ABC_file (Excel) :", font=("Helvetica", 12,"bold"), bg="#f0f8ff", fg="#000000").grid(row=4, column=0, padx=10, pady=10, sticky="w")
+abc_file_path = tk.Entry(root, width=50, font=("Helvetica", 12))
+abc_file_path.grid(row=4, column=1, padx=10, pady=10)
+tk.Button(root, text="Browse", command=lambda: browse_file(abc_file_path, "excel"), font=("Helvetica", 12), bg="#4682b4", fg="white").grid(row=4, column=2, padx=10, pady=10)
 
-tk.Label(root, text="Select UTD Output file (CSV):").grid(row=3, column=0, padx=10, pady=10, sticky="w")
-utd_file_path = tk.Entry(root, width=50)
-utd_file_path.grid(row=3, column=1, padx=10, pady=10)
-tk.Button(root, text="Browse", command=lambda: browse_file(utd_file_path, "csv")).grid(row=3, column=2, padx=10, pady=10)
+tk.Label(root, text="Select UTD Output file (CSV) :", font=("Helvetica", 12,"bold"), bg="#f0f8ff", fg="#000000").grid(row=5, column=0, padx=10, pady=10, sticky="w")
+utd_file_path = tk.Entry(root, width=50, font=("Helvetica", 12))
+utd_file_path.grid(row=5, column=1, padx=10, pady=10)
+tk.Button(root, text="Browse", command=lambda: browse_file(utd_file_path, "csv"), font=("Helvetica", 12), bg="#4682b4", fg="white").grid(row=5, column=2, padx=10, pady=10)
 
 # Run button
-tk.Button(root, text="Run", command=run_program, bg="green", fg="white",font="Calibri 20").grid(row=4, column=1, pady=40)
+tk.Button(root, text="Run", command=run_program, font=("Helvetica", 18, "bold"), bg="#32cd32", fg="white").grid(row=6, column=1, pady=60)
 
 # Start the GUI event loop
 root.mainloop()
