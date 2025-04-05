@@ -17,7 +17,16 @@ How to Use the .exe Application
 2. Follow the same steps as described in the "Usage" section to select files and process data.
 3. The output CSV file will be saved in the same directory as the selected master sheet.
 
+### Application Interface 
+![image](https://github.com/user-attachments/assets/53f40912-0a4e-4876-ab2e-c86f7ec82cf4)
 
+### Input Files 
+1. **Semester File of Result**
+   ![image](https://github.com/user-attachments/assets/19598f54-bcaf-48d4-b53c-5b898b769e14)
+2. **Student Details (new) Files**
+   ![image](https://github.com/user-attachments/assets/9adb71dd-005d-47e3-bc7f-d8317f1495cc)
+3. **ABC Data File** <br>
+   ![image](https://github.com/user-attachments/assets/487ddc94-a4b4-4ca3-bb24-cde4c2b30bd4)
 
 The `.exe` file was created using **PyInstaller**. 
 
@@ -140,8 +149,6 @@ The program also fills the constant data for subjects, credits, and grades for e
 
 ### Step 7: Save the Updated CSV File
 The program saves the updated CSV file with a new name based on the session and current semester. The file is saved in the same directory as the selected master sheet (`sem_sheet`).
-
----
 
 ---
 
