@@ -53,14 +53,15 @@ try:
     # Extract Credits, SGPA and Results of all Students
     credits = df_excel.iloc[2, 4:].reset_index(drop=True)
     credits = credits.dropna()
-    total_subjects, total_credits = len(credits), sum(credits)
+    subject_codes = df_excel.iloc[0, :].reset_index(drop=True)
+    subject_codes = subject_codes.dropna().reset_index(drop=True) # Drop columns where all values are NaN
+    total_subjects, total_credits = len(subject_codes), sum(credits)
     sgpa = df_excel.iloc[3:, 4 + total_subjects ].reset_index(drop=True)
     results = df_excel.iloc[3:, 5 + total_subjects].reset_index(drop=True)
 
     # Extract Subjects for all students
     subjects = df_excel.iloc[:,4:4 + total_subjects].reset_index(drop=True)
     subjects.columns = range(total_subjects)
-    subjects_id = subjects.iloc[0,:] # Extracting Subject IDs from first row of subjects
     subjects_names = subjects.iloc[1,:]
 
     # Extracting Grades and calculating grade points for all students
@@ -216,7 +217,7 @@ try:
     j=0
     for i in range(total_subjects):
         df_utd.iloc[2:required_rows, 39 + j] = subjects_names[i]
-        df_utd.iloc[2:required_rows, 40 + j] = subjects_id[i]
+        df_utd.iloc[2:required_rows, 40 + j] = subject_codes[i]
         df_utd.iloc[2:required_rows, 51 + j] = credits[i]
         j+=15
 
