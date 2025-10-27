@@ -51,11 +51,12 @@ try:
     # Extract Names of Student from column 'B' (index 1) starting from row 4 (index 3)
     student_names = df_excel.iloc[3:, 1].reset_index(drop=True)
     # Extract Credits, SGPA and Results of all Students
-    credits = df_excel.iloc[2, 4:].reset_index(drop=True)
-    credits = credits.dropna()
     subject_codes = df_excel.iloc[0, :].reset_index(drop=True)
     subject_codes = subject_codes.dropna().reset_index(drop=True) # Drop columns where all values are NaN
-    total_subjects, total_credits = len(subject_codes), sum(credits)
+    total_subjects = len(subject_codes)
+    credits = df_excel.iloc[2, 4:4+total_subjects].reset_index(drop=True)
+    credits = credits.dropna()
+    total_credits = sum(credits)
     sgpa = df_excel.iloc[3:, 4 + total_subjects ].reset_index(drop=True)
     results = df_excel.iloc[3:, 5 + total_subjects].reset_index(drop=True)
 
