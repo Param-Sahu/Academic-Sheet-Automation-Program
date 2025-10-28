@@ -172,15 +172,15 @@ try:
     # -----------------------------
     # For each student (starting at row 3 i.e. index 2), fill in columns A-F with constant values.
     if "five" in course_name.lower() or "dual" in course_name.lower():
-        course_full_name = "B.TECH.+M.TECH. (INTERNET OF THINGS) DUAL DEGREE 5 YRS."
+        course_full_name = "B.TECH.+M.TECH. DUAL DEGREE 5 YRS."
     else:
         course_full_name = f"{course_name} {stream}"
 
-    df_utd.iloc[2:required_rows, 0] = "DEVI AHILYA VISHWAVIDYALAYA INDORE"   # University Name (Column A)
+    df_utd.iloc[2:required_rows, 0] = "SCHOOL OF INSTRUMENTATION"   # University Name, currently College Name (Column A)
     df_utd.iloc[2:required_rows, 1] = "SCHOOL OF INSTRUMENTATION"     # College Name (Column B)
     df_utd.iloc[2:required_rows, 2] = course_name              # Course Name in Short (Column C)
-    df_utd.iloc[2:required_rows, 3] = course_full_name      # Full Course Name (Column D)
-    df_utd.iloc[2:required_rows, 4] = course_full_name         # Full Course Name in Detail (Column E)
+    df_utd.iloc[2:required_rows, 3] = course_name      # Full Course Name (Column D)
+    df_utd.iloc[2:required_rows, 4] = course_name         # Full Course Name in Detail (Column E)
     df_utd.iloc[2:required_rows, 5] = stream                # Stream (Column F)
     df_utd.iloc[2:required_rows, 7] = batch                                  # Session for Batch  
     df_utd.iloc[2:required_rows, 18] = YEAR                                  # Year for Batch  
