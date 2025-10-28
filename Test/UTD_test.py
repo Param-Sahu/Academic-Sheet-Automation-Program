@@ -51,11 +51,10 @@ try:
     # Extract Names of Student from column 'B' (index 1) starting from row 4 (index 3)
     student_names = df_excel.iloc[3:, 1].reset_index(drop=True)
     # Extract Credits, SGPA and Results of all Students
-    subject_codes = df_excel.iloc[0, :].reset_index(drop=True)
-    subject_codes = subject_codes.dropna().reset_index(drop=True) # Drop columns where all values are NaN
+    subject_codes = df_excel.iloc[0, 4:].reset_index(drop=True)
+    subject_codes = subject_codes.dropna().reset_index(drop=True).apply(lambda x:x.strip()) # Drop columns where all values are NaN
     total_subjects = len(subject_codes)
     credits = df_excel.iloc[2, 4:4+total_subjects].reset_index(drop=True)
-    credits = credits.dropna()
     total_credits = sum(credits)
     sgpa = df_excel.iloc[3:, 4 + total_subjects ].reset_index(drop=True)
     results = df_excel.iloc[3:, 5 + total_subjects].reset_index(drop=True)
@@ -130,6 +129,12 @@ try:
         YEAR = int(batch.split('-')[1])
         MONTH = "MAY"
 
+    provided_date = str(df_excel.iloc[0, 1]).strip()
+    if provided_date != "" and provided_date.lower() != 'nan':
+        _ , exam_month, exam_year = provided_date.split()
+        MONTH = exam_month.upper()
+        YEAR = int(exam_year)
+
 except Exception as e:
     print("Error occurred while Configuring Month and Year: ", e)
     print("Please check that Batch must be in correct format, Ex:'2000-2005'")
@@ -157,16 +162,24 @@ except Exception as e:
     print("Error Occured while adding the rows in UTD file.")
     
 try:
+    # Extract Course Information for all students (Row index 0, Column index 1 assuming zero-based index)
+    course_name =  (pd.read_excel(all_sem_file, header=None)).iloc[0, 1]  # Row 2, Column B in Excel (0-based index)
+    # Extract stream Information for all students (Row index 1, Column index 1 assuming zero-based index)
+    stream =  (pd.read_excel(all_sem_file, header=None)).iloc[1, 1]  # Row 1, Column 1 in Excel (0-based index)
     # Step 4: Fill constant data for all students
     # -----------------------------
     # For each student (starting at row 3 i.e. index 2), fill in columns A-F with constant values.
+    if "five" in course_name.lower() or "dual" in course_name.lower():
+        course_full_name = "B.TECH.+M.TECH. (INTERNET OF THINGS) DUAL DEGREE 5 YRS."
+    else:
+        course_full_name = f"{course_name} {stream}"
 
     df_utd.iloc[2:required_rows, 0] = "DEVI AHILYA VISHWAVIDYALAYA INDORE"   # University Name (Column A)
-    df_utd.iloc[2:required_rows, 1] = "SCHOOL OF INSTRUMENTATION INDORE"     # College Name (Column B)
-    df_utd.iloc[2:required_rows, 2] = "INTEGRATED M.TECH (IOT)"              # Course Name in Short (Column C)
-    df_utd.iloc[2:required_rows, 3] = "INTEGRATED MASTER OF TECHNOLOGY"      # Full Course Name (Column D)
-    df_utd.iloc[2:required_rows, 4] = "INTEGRATED MASTER OF TECHNOLOGY"      # Full Course Name in Detail (Column E)
-    df_utd.iloc[2:required_rows, 5] = "INTERNET OF THINGS"                   # Stream (Column F)
+    df_utd.iloc[2:required_rows, 1] = "SCHOOL OF INSTRUMENTATION"     # College Name (Column B)
+    df_utd.iloc[2:required_rows, 2] = course_name              # Course Name in Short (Column C)
+    df_utd.iloc[2:required_rows, 3] = course_full_name      # Full Course Name (Column D)
+    df_utd.iloc[2:required_rows, 4] = course_full_name         # Full Course Name in Detail (Column E)
+    df_utd.iloc[2:required_rows, 5] = stream                # Stream (Column F)
     df_utd.iloc[2:required_rows, 7] = batch                                  # Session for Batch  
     df_utd.iloc[2:required_rows, 18] = YEAR                                  # Year for Batch  
     df_utd.iloc[2:required_rows, 19] = MONTH                                 # MONTH for Batch  
@@ -180,7 +193,7 @@ except Exception as e:
 
 try:
     # Extracting ABC_ID from file but only till required rows.(As per number of students)
-    abc_id = pd.read_excel(abc_file,header=0).loc[:required_rows-3,"ABC ID"] # required rows-3 indicated included rows 
+    abc_id = pd.read_excel(abc_file,header=0).loc[:required_rows-3,"ABC ID"].astype(str) # required rows-3 indicated included rows 
 except Exception as e:
     print("Error occurred while reading ABC ID from Excel: ", e)
 
