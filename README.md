@@ -14,6 +14,23 @@ The `GUI.py` script has been converted into a standalone .`exe` desktop applicat
 
 How to Use the .exe Application
 1. Double-click the .exe file to launch the application.
+
+Building the standalone GUI (.exe) with PyInstaller
+-----------------------------------------------
+You can convert `GUI.py` into a single-file Windows GUI executable using PyInstaller. The following command was used when building the distributed application for ASAP:
+
+```powershell
+pyinstaller --onefile --windowed --icon=asap.ico --exclude-module torch --exclude-module matplotlib --exclude-module numpy.f2py --upx-dir "C:\Path_to\upx-5.0.2-win64" GUI.py
+```
+
+Notes:
+- `--onefile` bundles everything into a single `.exe`.
+- `--windowed` prevents a console window from opening for the GUI app.
+- `--icon` sets the application icon (optional).
+- The `--exclude-module` flags reduce the executable size by excluding large optional packages not used by this project.
+- `--upx-dir` points to the UPX executable directory (optional) to compress the final binary.
+
+After running the command, the generated `.exe` will be available in the `dist` folder created by PyInstaller.
 2. Follow the same steps as described in the "Usage" section to select files and process data.
 3. The output CSV file will be saved in the same directory as the selected master sheet.
 
