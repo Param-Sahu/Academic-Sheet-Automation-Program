@@ -82,8 +82,10 @@ try:
                                 else ('PASS' if x >= 4.0 else 'FAIL'))))
 
     # Calculating CGPA according to Semesters (Total SGPA till current Semester)/semester_number
-    total_sgpa = df_all_sem.loc[:len(roll_numbers)-1 ,'Sem1':'Sem'+str(sem_number)].sum(axis=1)
-    cgpa = round(total_sgpa/sem_number,3)
+    total_sem_sgpa = df_all_sem.loc[:len(roll_numbers)-1 ,'Sem1':'Sem'+str(sem_number)]
+    total_sem_credits = df_all_sem.loc[:0,'Credit_1':'Credit_'+str(sem_number)]
+    cgpa = total_sem_sgpa.mul(total_sem_credits.iloc[0].values, axis=1).sum(axis=1) / total_sem_credits.iloc[0].sum()
+    cgpa = cgpa.round(2)
 
 except Exception as e:
     print("Error occurred while reading Student Details: ", e)
