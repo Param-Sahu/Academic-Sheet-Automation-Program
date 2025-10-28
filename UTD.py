@@ -193,7 +193,7 @@ except Exception as e:
 
 try:
     # Extracting ABC_ID from file but only till required rows.(As per number of students)
-    abc_id = pd.read_excel(abc_file,header=0).loc[:required_rows-3,"ABC ID"] # required rows-3 indicated included rows 
+    abc_id = pd.read_excel(abc_file,header=0).loc[:required_rows-3,"ABC ID"].astype(str) # required rows-3 indicated included rows 
 except Exception as e:
     print("Error occurred while reading ABC ID from Excel: ", e)
 
