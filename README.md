@@ -48,6 +48,11 @@ After running the command, the generated `.exe` will be available in the `dist` 
 The `.exe` file was created using **PyInstaller**. 
 
 ---
+
+
+## Result Generation Flow
+![Result_Generator_Flow](flow.png)
+
 ## Usage
 
 ### `UTD.py`
